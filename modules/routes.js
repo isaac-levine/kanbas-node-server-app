@@ -19,6 +19,11 @@ function ModuleRoutes(app) {
     res.send(newModule);
   });
 
+  // get all the modules
+  app.get("/api/modules", (req, res) => {
+    res.send(db.modules);
+  });
+
   // route to delete a module
   app.delete("/api/modules/:mid", (req, res) => {
     const { mid } = req.params;
