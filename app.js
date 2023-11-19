@@ -20,6 +20,7 @@ app.use(
 );
 
 Lab5(app);
+app.use(express.json());
 ModuleRoutes(app);
 CourseRoutes(app);
 HelloRoutes(app);

@@ -29,32 +29,24 @@ function CourseRoutes(app) {
   });
 
   // update a course
-  app.put("/api/courses/:courseId", (req, res) => {
-    const courseId = req.params.courseId;
-    const updatedCourse = req.body;
-
-    const index = Database.courses.findIndex(
-      (course) => course._id === courseId
+  app.put("/api/courses/:id", (req, res) => {
+    const { id } = req.params;
+    const course = req.body;
+    Database.courses = Database.courses.map((c) =>
+      c._id === id ? { ...c, ...course } : c
     );
-
-    if (index !== -1) {
-      Database.courses[index] = updatedCourse;
-      res.send(updatedCourse);
-    } else {
-      res.status(404).send({ error: `Course with ID ${courseId} not found.` });
-    }
+    res.sendStatus(204);
   });
 
   // get a course by ID
-  app.get("/api/courses/:courseId", (req, res) => {
-    const courseId = req.params.courseId;
-    const course = Database.courses.find((c) => c._id === courseId);
-
-    if (course) {
-      res.send(course);
-    } else {
-      res.status(404).send({ error: `Course with ID ${courseId} not found.` });
+  app.get("/api/courses/:id", (req, res) => {
+    const { id } = req.params;
+    const course = Database.courses.find((c) => c._id === id);
+    if (!course) {
+      res.status(404).send("Course not found");
+      return;
     }
+    res.send(course);
   });
 }
 export default CourseRoutes;
