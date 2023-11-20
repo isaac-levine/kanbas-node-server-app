@@ -4,6 +4,7 @@ import HelloRoutes from "./hello.js";
 import Lab5 from "./Lab5.js";
 import CourseRoutes from "./courses/routes.js";
 import ModuleRoutes from "./modules/routes.js";
+import AssignmentRoutes from "./assignments/routes.js";
 import cors from "cors";
 import "dotenv/config";
 
@@ -21,6 +22,7 @@ app.use(
 
 Lab5(app);
 app.use(express.json());
+AssignmentRoutes(app);
 ModuleRoutes(app);
 CourseRoutes(app);
 HelloRoutes(app);

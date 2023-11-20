@@ -1,5 +1,11 @@
-import Database from "../Database";
+import db from "../Database/index.js";
+
 function AssignmentRoutes(app) {
+  // route for getting all assignments
+  app.get("/api/assignments", (req, res) => {
+    res.send(Database.assignments);
+  });
+
   // route for creating a new assignment
   app.post("/api/courses/:cid/assignments", (req, res) => {
     const assignment = { ...req.body, _id: new Date().getTime().toString() };
@@ -51,5 +57,4 @@ function AssignmentRoutes(app) {
     res.sendStatus(204);
   });
 }
-
 export default AssignmentRoutes;
