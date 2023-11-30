@@ -1,57 +1,95 @@
 import * as dao from "./dao.js";
 // let currentUser = null;
+
 function UserRoutes(app) {
   const createUser = async (req, res) => {
-    const user = await dao.createUser(req.body);
-    res.json(user);
+    try {
+      const user = await dao.createUser(req.body);
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Error creating user" });
+    }
   };
 
   const deleteUser = async (req, res) => {
-    const status = await dao.deleteUser(req.params.userId);
-    res.json(status);
+    try {
+      const status = await dao.deleteUser(req.params.userId);
+      res.json(status);
+    } catch (error) {
+      res.status(500).json({ message: "Error creating user" });
+    }
   };
+
   const findAllUsers = async (req, res) => {
-    const users = await dao.findAllUsers();
-    res.json(users);
+    try {
+      const users = await dao.findAllUsers();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: "Error finding users" });
+    }
   };
 
   const findUserById = async (req, res) => {
-    const user = await dao.findUserById(req.params.userId);
-    res.json(user);
+    try {
+      const user = await dao.findUserById(req.params.userId);
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Error finding user by ID" });
+    }
   };
 
   const updateUser = async (req, res) => {
-    const { userId } = req.params;
-    const status = await dao.updateUser(userId, req.body);
-    const currentUser = await dao.findUserById(userId);
-    req.session["currentUser"] = currentUser;
-    res.json(status);
+    try {
+      const { userId } = req.params;
+      const status = await dao.updateUser(userId, req.body);
+      const currentUser = await dao.findUserById(userId);
+      req.session["currentUser"] = currentUser;
+      res.json(status);
+    } catch (error) {
+      res.status(500).json({ message: "Error updating user" });
+    }
   };
 
   const signup = async (req, res) => {
-    const user = await dao.findUserByUsername(req.body.username);
-    if (user) {
-      res.status(400).json({ message: "Username already taken" });
+    try {
+      const user = await dao.findUserByUsername(req.body.username);
+      if (user) {
+        res.status(400).json({ message: "Username already taken" });
+      }
+      const currentUser = await dao.createUser(req.body);
+      req.session["currentUser"] = currentUser;
+      res.json(currentUser);
+    } catch (error) {
+      res.status(500).json({ message: "Error signing up" });
     }
-    const currentUser = await dao.createUser(req.body);
-    req.session["currentUser"] = currentUser;
-    res.json(currentUser);
   };
 
   const signin = async (req, res) => {
-    const { username, password } = req.body;
-    const currentUser = await dao.findUserByCredentials(username, password);
-    req.session["currentUser"] = currentUser;
-    res.json(currentUser);
+    try {
+      const { username, password } = req.body;
+      const currentUser = await dao.findUserByCredentials(username, password);
+      req.session["currentUser"] = currentUser;
+      res.json(currentUser);
+    } catch (error) {
+      res.status(500).json({ message: "Error signing in" });
+    }
   };
 
   const signout = (req, res) => {
-    req.session.destroy();
-    res.json(200);
+    try {
+      req.session.destroy();
+      res.json(200);
+    } catch (error) {
+      res.status(500).json({ message: "Error signing out" });
+    }
   };
 
   const account = async (req, res) => {
-    res.json(req.session["currentUser"]);
+    try {
+      res.json(req.session["currentUser"]);
+    } catch (error) {
+      res.status(500).json({ message: "Error retrieving account" });
+    }
   };
 
   app.post("/api/users", createUser);
