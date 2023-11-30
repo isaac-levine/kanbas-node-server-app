@@ -39,6 +39,10 @@ import mongoose from "mongoose";
 import UserRoutes from "./users/routes.js";
 mongoose.connect("mongodb://127.0.0.1:27017/kanbas");
 
+const CONNECTION_STRING =
+  process.env.DB_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas";
+mongoose.connect(CONNECTION_STRING);
+
 UserRoutes(app);
 Lab5(app);
 app.use(express.json());
